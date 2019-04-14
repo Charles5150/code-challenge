@@ -20,6 +20,11 @@ export class ArticleFull extends Component{
   }
 
   render() {
+    let published = <div>Not Published</div>;
+    if( this.state.article.published) {
+      published = <div>Published</div>
+    }
+
     let tags = <div></div>;
     if(this.state.article.tags) {
       tags = this.state.article.tags.map((item, key) => (
@@ -36,7 +41,7 @@ export class ArticleFull extends Component{
           {this.state.article.content}
         </div>
         <div className="rounded">
-          {this.state.article.published}
+          {published}
         </div>
         <div className="rounded">
           {tags}
