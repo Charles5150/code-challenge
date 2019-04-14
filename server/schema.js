@@ -44,6 +44,15 @@ const Query = new GraphQLObjectType({
       resolve() {
         return db.Article.find();
       },
+    },
+    article: {
+      type: articleType,
+      args: {
+        id: { type: GraphQLString}
+      },
+      resolve(obj, { id }) {
+        return db.Article.findById(id);
+      }
     }
   }),
 });

@@ -29,6 +29,7 @@ export class ArticleList extends Component {
       <ArticleItem
         author={item.author}
         excerpt={item.excerpt}
+        id={item.id}
         key={key}
       />
     ));

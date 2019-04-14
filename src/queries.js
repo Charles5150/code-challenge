@@ -7,8 +7,8 @@ export const ARTICLES_QUERY = `{
   }
 }`;
 
-export const ARTICLES_FULL = `{
-  articles {
+export const ARTICLE_BY_ID = (id) => `{
+  article(id: "${id}") {
     author
     content
     published
