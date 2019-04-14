@@ -44,7 +44,7 @@ const Query = new GraphQLObjectType({
       resolve() {
         return db.Article.find();
       },
-    },
+    }
   }),
 });
 

@@ -1,39 +1,17 @@
 import React, { Component } from 'react';
-import request from './request';
-import { ARTICLES_QUERY } from './queries';
+import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 
-import { ArticleItem } from './ArticleItem';
+import { ArticleList } from './ArticleList';
 
-class App extends Component {
-  // definition
-  constructor(props) {
-    super(props);
-    this.state = {
-      articles: [],
-    };
-  }
-
-  // lifecycle
-  componentWillMount() {
-    request(ARTICLES_QUERY).then(response => {
-      this.setState({ articles: response.data.articles });
-    });
-  }
-
+export class App extends Component {
   // Renders
   render() {
     return (
       <div className="App">
         <h2>Billin code challenge</h2>
-        <h3>Header</h3>
-        {this.state.articles.map((item, key) =>
-        <ArticleItem
-            author={item.author}
-            excerpt={item.excerpt}
-            key={key}
-        />
-        )}
-        <h3>Footer</h3>
+        <Router>
+        <Route exact path="/" component={ArticleList} />
+        </Router>
       </div>
     );
   }
