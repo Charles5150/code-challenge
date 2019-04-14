@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 
 import request from './request';
-import {ARTICLE_BY_ID} from './queries';
+import {ARTICLE_BY_ID, ARTICLE_REMOVE} from './queries';
 
 export class ArticleFull extends Component{
   constructor(props) {
@@ -19,6 +19,21 @@ export class ArticleFull extends Component{
     });
   }
 
+  remove = () => {
+    if (window.confirm(`Remove Article id ${this.state.article.id} ???`)) {
+      let query = ARTICLE_REMOVE;
+      query = query.replace('#id',this.state.article.id);
+      request(query).then(response => {
+        console.log('article removed');
+        this.props.history.push('/');
+      });
+    } else {
+
+    }
+
+  }
+
+
   render() {
     let published = <div>Not Published</div>;
     if( this.state.article.published) {
@@ -34,6 +49,7 @@ export class ArticleFull extends Component{
 
     return (
       <div className="rounded">
+        <button onClick={this.remove}>Remove</button>
         <div className="rounded">
           {this.state.article.author}
         </div>

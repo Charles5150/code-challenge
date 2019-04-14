@@ -36,9 +36,7 @@ export class ArticleList extends Component {
 
     return (
       <div>
-        <h3>Header</h3>
         <div>{articles}</div>
-        <h3>Footer</h3>
       </div>
     );
   }

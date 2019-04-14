@@ -9,6 +9,7 @@ export const ARTICLES_QUERY = `{
 
 export const ARTICLE_BY_ID = (id) => `{
   article(id: "${id}") {
+    id
     author
     content
     published
@@ -16,3 +17,5 @@ export const ARTICLE_BY_ID = (id) => `{
     title
   }
 }`;
+
+export const ARTICLE_REMOVE = 'mutation{remove(id:"#id"){id}}';
