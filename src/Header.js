@@ -6,6 +6,7 @@ export const Header = () => (
     <h2>BILLIN CODE CHALLENGE</h2>
     <div>
       <Link to="/">Home</Link>
+      <span>     </span>
       <Link to="/new">New</Link>
     </div>
 
