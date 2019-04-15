@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 
 import request from './request';
-import {ARTICLE_BY_ID, ARTICLE_REMOVE} from './queries';
+import {ARTICLE_BY_ID, ARTICLE_REMOVE, ARTICLE_UPDATE} from './queries';
 
 export class ArticleFull extends Component{
   constructor(props) {
@@ -24,7 +24,7 @@ export class ArticleFull extends Component{
     const liElements = this.refs.tags.getElementsByTagName('li');
     let tagValues = [];
     for(let i=0; i<liElements.length; i++) {
-      tagValues.push(liElements.item(i).children[0].value);
+      tagValues.push(liElements.item(i).children[1].value);
     }
 
     const updatedArticle = {
@@ -51,44 +51,63 @@ export class ArticleFull extends Component{
     }
   };
 
+  save = () => {
+    let query = ARTICLE_UPDATE;
+    query = query.replace('#id', this.state.article.id);
+    query = query.replace('#author', this.state.article.author);
+    query = query.replace('#content', this.state.article.content.replace(/(\r\n|\n|\r)/gm, ''));
+    query = query.replace('#published', this.state.article.published);
+    query = query.replace('#tags', JSON.stringify(this.state.article.tags));
+    query = query.replace('#title', this.state.article.title);
+    request(query).then(response => {
+      console.log('article updated');
+      this.props.history.push('/');
+    });
+
+  };
+
   edit = () => {
-    this.setState({originalArticle: this.state.article});
+    this.setState({originalArticle: this.cloneArticle()});
     this.setState({editing: true});
   };
 
   cancel = () => {
     this.setState({editing: false});
     this.setState({article: this.state.originalArticle});
-  }
+  };
+
+  cloneArticle = () => {
+    const clonedArticle = {
+      id: this.state.article.id,
+      author: this.state.article.author,
+      content: this.state.article.content,
+      published: this.state.article.published,
+      tags: this.state.article.tags,
+      title: this.state.article.title,
+    };
+    return clonedArticle;
+  };
 
   addTag = () => {
-    this.refs.tags.innerHTML += '<li><input type="text" value="" onChange={this.updateState} /></li>';
-  }
+    const cloned = this.cloneArticle();
+    cloned.tags.push(" ");
+    this.setState({article: cloned});
+  };
 
-  removeTag = (key) => {
-    console.log('key', key);
-  }
+  removeTag = (event) => {
+    const id = event.target.parentElement.id;
+    const cloned = this.cloneArticle();
+    cloned.tags.splice(id, 1);
+    this.setState({article: cloned});
+  };
 
 
   render() {
-    /*
-    let published = <div>Not Published</div>;
-    if( this.state.article.published) {
-      published = <div>Published</div>
-    }
-    */
 
     let tags = <div></div>;
-    /*
-    if(this.state.article.tags) {
+    if(this.state.article && this.state.article.tags) {
       tags = this.state.article.tags.map((item, key) => (
-        <div key={key} className="rounded">{item}</div>
-      ));
-    }
-    */
-    if(this.state.article.tags) {
-      tags = this.state.article.tags.map((item, key) => (
-        <li key={key}><button onClick={this.removeTag(key)} >Remove</button><input type="text" disabled={!this.state.editing} value={item} onChange={this.updateState} /></li>
+        <li id={key} key={key}><button onClick={this.removeTag} >Remove</button><input type="text" disabled={!this.state.editing} value={item} onChange={this.updateState} /></li>
       ));
     }
 
@@ -97,9 +116,10 @@ export class ArticleFull extends Component{
         <button onClick={this.remove}>Remove</button>
         <button onClick={this.edit}>Edit</button>
         <button onClick={this.cancel}>Cancel</button>
+        <button onClick={this.save}>Save</button>
         <div className="rounded">
           <div>Author</div>
-          <input type="text" disabled={!this.state.editing} value={this.state.article.author} onChange={this.updateState} ref="author"/>
+          <input type="text" disabled={!this.state.editing} value={this.state.article.author} onChange={this.updateState} ref="author" />
         </div>
         <div className="rounded">
           <div>Content</div>

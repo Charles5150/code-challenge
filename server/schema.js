@@ -71,6 +71,21 @@ const mutation = new GraphQLObjectType({
       },
     },
 
+    update: {
+      type: articleType,
+      args: {
+        id: { type: GraphQLID },
+        author: { type: GraphQLString },
+        content: { type: GraphQLString },
+        published: { type: GraphQLBoolean },
+        tags: { type: new GraphQLList(GraphQLString) },
+        title: { type: GraphQLString },
+      },
+      resolve(parentValue, { id, author, content, published, tags, title}) {
+        return db.Article.findOneAndUpdate({ _id: id }, { author, content, published, tags, title });
+      },
+    },
+
   },
 });
 
