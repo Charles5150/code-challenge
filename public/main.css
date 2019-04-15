@@ -15,3 +15,16 @@ textarea{
 input{
     width: 100%;
 }
+
+ul{
+    list-style: none;
+}
+
+ul input{
+    width: 50%;
+}
+
+button:disabled,
+button[disabled]{
+    display: none;
+}

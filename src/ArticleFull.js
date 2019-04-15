@@ -95,7 +95,11 @@ export class ArticleFull extends Component{
 
   cancel = () => {
     this.setState({editing: false});
-    this.setState({article: this.state.originalArticle});
+    if( this.state.article.id === "new") {
+      this.props.history.push('/');
+    } else {
+      this.setState({article: this.state.originalArticle});
+    }
   };
 
   cloneArticle = () => {
@@ -129,16 +133,16 @@ export class ArticleFull extends Component{
     let tags = <div></div>;
     if(this.state.article && this.state.article.tags) {
       tags = this.state.article.tags.map((item, key) => (
-        <li id={key} key={key}><button onClick={this.removeTag} >Remove</button><input type="text" disabled={!this.state.editing} value={item} onChange={this.updateState} /></li>
+        <li id={key} key={key}><button disabled={!this.state.editing} onClick={this.removeTag} >Remove</button><input type="text" disabled={!this.state.editing} value={item} onChange={this.updateState} /></li>
       ));
     }
 
     return (
       <div className="rounded">
-        <button onClick={this.remove}>Remove</button>
-        <button onClick={this.edit}>Edit</button>
-        <button onClick={this.cancel}>Cancel</button>
-        <button onClick={this.save}>Save</button>
+        <button disabled={this.state.editing} onClick={this.remove}>Remove</button>
+        <button disabled={this.state.editing} onClick={this.edit}>Edit</button>
+        <button disabled={!this.state.editing} onClick={this.cancel}>Cancel</button>
+        <button disabled={!this.state.editing} onClick={this.save}>Save</button>
         <div className="rounded">
           <div>Author</div>
           <input type="text" disabled={!this.state.editing} value={this.state.article.author} onChange={this.updateState} ref="author" />
@@ -153,7 +157,7 @@ export class ArticleFull extends Component{
         </div>
         <div className="rounded">
           <div>Tags</div>
-          <button onClick={this.addTag}>Add Tag</button>
+          <button disabled={!this.state.editing} onClick={this.addTag}>Add Tag</button>
           <ul ref="tags">
           {tags}
           </ul>
