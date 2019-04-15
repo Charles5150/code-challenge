@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 
 import request from './request';
-import {ARTICLE_BY_ID, ARTICLE_REMOVE, ARTICLE_UPDATE} from './queries';
+import {ARTICLE_BY_ID, ARTICLE_REMOVE, ARTICLE_UPDATE, ARTICLE_INSERT} from './queries';
 
 export class ArticleFull extends Component{
   constructor(props) {
@@ -13,11 +13,27 @@ export class ArticleFull extends Component{
   }
 
   componentWillMount() {
-    request(ARTICLE_BY_ID(this.props.match.params.id)).then(response => {
-      this.setState({ article: response.data.article });
+    const id = this.props.match.params.id;
+    if(id === "new") {
+      const emptyArticle = {
+        id : "new",
+        author : "",
+        content : "",
+        published : false,
+        tags : [],
+        title : "",
+      }
+      this.setState({article : emptyArticle});
+      this.setState({editing: true});
       console.log('articlefull state', this.state);
       console.log('articlefull props', this.props);
-    });
+    } else {
+      request(ARTICLE_BY_ID(id)).then(response => {
+        this.setState({article: response.data.article});
+        console.log('articlefull state', this.state);
+        console.log('articlefull props', this.props);
+      });
+    }
   }
 
   updateState = () => {
@@ -52,15 +68,21 @@ export class ArticleFull extends Component{
   };
 
   save = () => {
-    let query = ARTICLE_UPDATE;
-    query = query.replace('#id', this.state.article.id);
+    let query;
+    if( this.state.article.id === "new") {
+      query = ARTICLE_INSERT;
+    } else {
+      query = ARTICLE_UPDATE;
+      query = query.replace('#id', this.state.article.id);
+    }
+
     query = query.replace('#author', this.state.article.author);
     query = query.replace('#content', this.state.article.content.replace(/(\r\n|\n|\r)/gm, ''));
     query = query.replace('#published', this.state.article.published);
     query = query.replace('#tags', JSON.stringify(this.state.article.tags));
     query = query.replace('#title', this.state.article.title);
     request(query).then(response => {
-      console.log('article updated');
+      console.log('article updated or inserted');
       this.props.history.push('/');
     });
 

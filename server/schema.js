@@ -86,6 +86,20 @@ const mutation = new GraphQLObjectType({
       },
     },
 
+    insert: {
+      type: articleType,
+      args: {
+        author: { type: GraphQLString },
+        content: { type: GraphQLString },
+        published: { type: GraphQLBoolean },
+        tags: { type: new GraphQLList(GraphQLString) },
+        title: { type: GraphQLString },
+      },
+      resolve(parentValue, { author, content, published, tags, title }) {
+        return db.Article.create({ author, content, published, tags, title });
+      },
+    },
+
   },
 });
 
