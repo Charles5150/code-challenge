@@ -1,20 +1,20 @@
-import React, {Component} from 'react';
+import React from 'react';
 import {Link} from 'react-router-dom';
 
-export class ArticleItem extends Component{
-  render() {
-    return (
+const ArticleItem = ({id, author, excerpt}) => {
+  return (
+    <div className="rounded">
+      <Link to={`/${id}`}>
+        View
+      </Link>
       <div className="rounded">
-        <Link to={`/${this.props.id}`}>
-          View
-        </Link>
-        <div className="rounded">
-          {this.props.author}
-        </div>
-        <div className="rounded">
-          {this.props.excerpt}
-        </div>
+        {author}
       </div>
-    );
-  }
+      <div className="rounded">
+        {excerpt}
+      </div>
+    </div>
+  );
 }
+
+export default ArticleItem;

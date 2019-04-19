@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-export const Header = () => (
+const Header = () => (
   <header>
     <h2>BILLIN CODE CHALLENGE</h2>
     <div>
@@ -12,3 +12,5 @@ export const Header = () => (
 
   </header>
 )
+
+export default Header;
