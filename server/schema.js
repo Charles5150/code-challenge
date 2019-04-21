@@ -77,12 +77,13 @@ const mutation = new GraphQLObjectType({
         id: { type: GraphQLID },
         author: { type: GraphQLString },
         content: { type: GraphQLString },
+        excerpt: { type: GraphQLString },
         published: { type: GraphQLBoolean },
         tags: { type: new GraphQLList(GraphQLString) },
         title: { type: GraphQLString },
       },
-      resolve(parentValue, { id, author, content, published, tags, title}) {
-        return db.Article.findOneAndUpdate({ _id: id }, { author, content, published, tags, title });
+      resolve(parentValue, { id, author, content, excerpt, published, tags, title}) {
+        return db.Article.findOneAndUpdate({ _id: id }, { author, content, excerpt, published, tags, title });
       },
     },
 
@@ -91,12 +92,13 @@ const mutation = new GraphQLObjectType({
       args: {
         author: { type: GraphQLString },
         content: { type: GraphQLString },
+        excerpt: { type: GraphQLString },
         published: { type: GraphQLBoolean },
         tags: { type: new GraphQLList(GraphQLString) },
         title: { type: GraphQLString },
       },
-      resolve(parentValue, { author, content, published, tags, title }) {
-        return db.Article.create({ author, content, published, tags, title });
+      resolve(parentValue, { author, content, excerpt, published, tags, title }) {
+        return db.Article.create({ author, content, excerpt, published, tags, title });
       },
     },
 

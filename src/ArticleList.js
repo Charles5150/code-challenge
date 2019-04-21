@@ -1,9 +1,11 @@
 import React from 'react';
 import ArticleItem from './ArticleItem';
+import {Button, Icon, Preloader, Row, Card} from 'react-materialize';
+import {Link} from "react-router-dom";
 
 const ArticleList = ({fetching, articles}) => {
   if( fetching ) {
-    return <div>Fetching....</div>
+    return <Preloader size="big" />;
   } else {
     const list = articles.map((item, key) => (
       <ArticleItem
@@ -15,12 +17,20 @@ const ArticleList = ({fetching, articles}) => {
     ));
 
     return (
-      <div>
-        <div>{list}</div>
-      </div>
-    );
+      <Card className="indigo lighten-5">
+      <Link to="/new">
+        <Button waves="light" style={{marginRight: '5px'}}>
+          New
+          <Icon left>
+            add
+          </Icon>
+        </Button>
+      </Link>
+      <Row>{list}</Row>;
+      </Card>
+    )
   }
-}
+};
 
 export default ArticleList;
 

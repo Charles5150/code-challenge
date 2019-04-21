@@ -9,12 +9,12 @@ import Footer from './Footer';
 export const App = () => (
   <div className="App">
     <Router>
-      <Header/>
+      <Header />
       <Route exact path="/" component={ArticleListContainer} />
       <Route path="/:id" component={ArticleFullContainer} />
-      <Footer/>
+      <Footer />
     </Router>
   </div>
-)
+);
 
 export default App;

@@ -1,8 +1,9 @@
-import React, {Component} from 'react';
+import React from 'react';
+import {Button, Preloader, Modal, TextInput, Textarea, Card, Checkbox, Row, Col} from 'react-materialize';
 
-class ArticleFull extends Component{
+class ArticleFull extends React.Component{
   constructor(props) {
-    super(props);
+    super();
     this.state = {
       editing: false
     }
@@ -10,38 +11,33 @@ class ArticleFull extends Component{
 
   update = (article) => {
     this.props.onUpdate(article);
-  }
+  };
 
   updateState = () => {
     this.update(this.cloneArticle());
   };
 
   cloneArticle = () => {
-    const liElements = this.refs.tags.getElementsByTagName('li');
+    const tagElements = document.getElementsByName('tagItem');
     let tagValues = [];
-    for(let i=0; i<liElements.length; i++) {
-      tagValues.push(liElements.item(i).children[1].value);
+    for(let i=0; i<tagElements.length; i++) {
+      tagValues.push(tagElements[i].value);
     }
 
-    const clonedArticle = {
+    return {
       id: this.props.article.id,
-      author: this.refs.author.value,
-      content: this.refs.content.value,
-      published: this.refs.published.checked,
+      author: document.getElementById('author').value,
+      content: document.getElementById('content').value,
+      excerpt: document.getElementById('content').value.slice(0, 350),
+      published: document.getElementById('published').checked,
       tags: tagValues,
-      title: this.refs.title.value,
+      title: document.getElementById('title').value,
     };
-
-    return clonedArticle;
   };
 
   remove = () => {
-    if (window.confirm(`Remove Article id ${this.props.article.id} ???`)) {
-      this.props.onRemove();
-      this.props.history.push('/');
-    } else {
-
-    }
+    this.props.onRemove();
+    this.props.history.push('/');
   };
 
   save = () => {
@@ -60,65 +56,91 @@ class ArticleFull extends Component{
 
   addTag = () => {
     const cloned = this.cloneArticle();
-    cloned.tags.push("")
+    cloned.tags.push("");
     this.update(cloned);
   };
 
   removeTag = (event) => {
-    const id = event.target.parentElement.id;
+    const id = Number(event.currentTarget.name);
     const cloned = this.cloneArticle();
     cloned.tags.splice(id, 1);
     this.update(cloned);
   };
 
-
-
   render() {
-
-    let tags = <div></div>;
+    let tags = "<Row></Row>";
     if(this.props.article && this.props.article.tags) {
       tags = this.props.article.tags.map((item, key) => (
-        <li id={key} key={key}><button disabled={!this.state.editing} onClick={this.removeTag} >Remove</button><input type="text" disabled={!this.state.editing} value={item} onChange={this.updateState} /></li>
+        <Row key={key}>
+          <Col s={1}>
+            <Button
+              name={key}
+              float="left"
+              floating
+              small
+              className="red"
+              waves="light"
+              icon="delete_forever"
+              disabled={!this.state.editing}
+              onClick={this.removeTag} >
+              Remove
+            </Button>
+          </Col>
+          <Col s={11}>
+            <input type="text"
+              name="tagItem"
+              disabled={!this.state.editing}
+              value={item}
+              onChange={this.updateState}
+            />
+          </Col>
+        </Row>
       ));
     }
 
     if(this.props.fetching) {
-      return <div>Fetching ...</div>
+      return <Preloader size="big" />;
     } else {
       return (
-        <div className="rounded">
-          <button disabled={this.state.editing || this.props.article.id==='new'} onClick={this.remove}>Remove</button>
-          <button disabled={this.state.editing} onClick={this.edit}>Edit</button>
-          <button disabled={!this.state.editing} onClick={this.cancel}>Cancel</button>
-          <button disabled={!this.state.editing} onClick={this.save}>Save</button>
-          <div className="rounded">
-            <div>Author</div>
-            <input type="text" disabled={!this.state.editing} value={this.props.article.author}
+
+        <Card className="indigo lighten-5">
+          <Modal
+            id="delete-modal"
+            header="Confirm Delete"
+            actions={[<Button waves="light" modal="close" onClick={this.remove}>Delete</Button>, <Button waves="light" modal="close">Cancel</Button>]}
+          >
+            <p>Remove Article id {this.props.article.id} ?</p>
+          </Modal>
+          <Button waves="light" disabled={this.state.editing || this.props.article.id==='new'} className="modal-trigger" href="#delete-modal">Remove</Button>
+          <Button waves="light" disabled={this.state.editing} onClick={this.edit}>Edit</Button>
+          <Button waves="light" disabled={!this.state.editing} onClick={this.cancel}>Cancel</Button>
+          <Button waves="light" disabled={!this.state.editing} onClick={this.save}>Save</Button>
+          <Card title="Author">
+            <TextInput id="author" disabled={!this.state.editing} value={this.props.article.author}
                    onChange={this.updateState} ref="author"/>
-          </div>
-          <div className="rounded">
-            <div>Content</div>
-            <textarea rows="10" cols="50" disabled={!this.state.editing} value={this.props.article.content}
+          </Card>
+          <Card title="Content">
+            <Textarea id="content" disabled={!this.state.editing} value={this.props.article.content}
                       onChange={this.updateState} ref="content"/>
-          </div>
-          <div className="rounded">
-            <div>Published</div>
-            <input type="checkbox" disabled={!this.state.editing} checked={this.props.article.published}
-                   onChange={this.updateState} ref="published"/>
-          </div>
-          <div className="rounded">
-            <div>Tags</div>
-            <button disabled={!this.state.editing} onClick={this.addTag}>Add Tag</button>
-            <ul ref="tags">
+          </Card>
+          <Card>
+            <Checkbox id="published" label="Published" value="Published" disabled={!this.state.editing} checked={this.props.article.published}
+                   onChange={this.updateState} />
+          </Card>
+          <Card title="Tags">
+            <Button floating
+                    className="red"
+                    waves="light"
+                    icon="add" disabled={!this.state.editing} onClick={this.addTag}>Add Tag</Button>
+            <div>
               {tags}
-            </ul>
-          </div>
-          <div className="rounded">
-            <div>Title</div>
-            <input type="text" disabled={!this.state.editing} value={this.props.article.title}
+            </div>
+          </Card>
+          <Card title="Title">
+            <TextInput id="title" disabled={!this.state.editing} value={this.props.article.title}
                    onChange={this.updateState} ref="title"/>
-          </div>
-        </div>
+          </Card>
+        </Card>
       );
     }
   }

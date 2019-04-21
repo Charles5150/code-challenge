@@ -11,6 +11,6 @@ const ArticleListContainer = observer(() => {
       articles={store.list}
     />
   )
-})
+});
 
 export default ArticleListContainer;

@@ -21,7 +21,7 @@ class ArticleList {
       this.list = response.data.articles ;
       this.fetching = false;
     });
-  }
+  };
 
   selectCurrent = (id) => {
     this.currentArticle.fetchArticle(id);
@@ -45,6 +45,7 @@ class Article {
         id : "new",
         author : "",
         content : "",
+        excerpt : "",
         published : false,
         tags : [],
         title : "",
@@ -56,7 +57,7 @@ class Article {
         this.fetching = false;
       });
     }
-  }
+  };
 
   save = () => {
     let query;
@@ -69,6 +70,7 @@ class Article {
 
     query = query.replace('#author', this.content.author);
     query = query.replace('#content', this.content.content.replace(/(\r\n|\n|\r)/gm, ''));
+    query = query.replace('#excerpt', this.content.excerpt.replace(/(\r\n|\n|\r)/gm, ''));
     query = query.replace('#published', this.content.published);
     query = query.replace('#tags', JSON.stringify(this.content.tags));
     query = query.replace('#title', this.content.title);
@@ -89,11 +91,11 @@ class Article {
 
   update = (article) => {
     this.content = article;
-  }
+  };
 
   cancel = () => {
     this.fetchArticle(this.content.id);
-  }
+  };
 }
 
 decorate(ArticleList, {
@@ -106,8 +108,10 @@ decorate(Article, {
   content : observable,
   fetching : observable,
   currentArticle : observable,
-  cancel : action,
   update: action,
+  remove: action,
+  save: action,
+  cancel: action,
 });
 
 const store = new ArticleList();

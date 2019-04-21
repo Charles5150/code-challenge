@@ -24,7 +24,7 @@ ul input{
     width: 50%;
 }
 
-button:disabled,
-button[disabled]{
+xbutton:disabled,
+xbutton[disabled]{
     display: none;
 }

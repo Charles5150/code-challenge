@@ -6,6 +6,6 @@ const Footer = () => (
       by Charles5150
     </div>
   </footer>
-)
+);
 
 export default Footer;

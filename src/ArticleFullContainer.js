@@ -6,8 +6,8 @@ import {store} from './store';
 
 
 class ArticleFullContainer extends React.Component  {
-  constructor(props) {
-    super(props);
+
+  componentWillMount() {
     store.selectCurrent(this.props.match.params.id);
   }
 
